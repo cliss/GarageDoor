@@ -28,7 +28,7 @@ signal.signal(signal.SIGINT, cleanUp)
 
 # Logger
 def log(message):
-    print("{}> {}".format(datetime.datetime.now().strftime("%d-%m@%H:%M:%S"), message))
+    print("{}> {}".format(datetime.datetime.now().strftime("%d-%b@%H:%M:%S"), message))
 
 oldIsOpen = None
 isOpen = None

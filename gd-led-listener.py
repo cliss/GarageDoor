@@ -22,7 +22,7 @@ GPIO.setup(18, GPIO.OUT)
 
 # Logger
 def log(message):
-    print("{}> {}".format(datetime.datetime.now().strftime("%d-%m@%H:%M:%S"), message))
+    print("{}> {}".format(datetime.datetime.now().strftime("%d-%b@%H:%M:%S"), message))
 
 # Prepare to clean up
 def cleanUp(signal, frame):
