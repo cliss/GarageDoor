@@ -20,20 +20,26 @@ GPIO.setwarnings(True)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(18, GPIO.OUT)
 
+# Logger
+def log(message):
+    print("{}> {}".format(datetime.datetime.now().strftime("%d-%m@%H:%M:%S"), message))
+
 # Prepare to clean up
 def cleanUp(signal, frame):
     print ""
+    log("Cleaning up...")
     GPIO.cleanup()
     sock.close()
     sys.exit(0)
 signal.signal(signal.SIGINT, cleanUp)
 
 while True:
-    print "Waiting..."
+    log("Waiting...")
     data, address = sock.recvfrom(1024)
-    print datetime.datetime.now(), "> ", data
     if data == "closed":
+        log("Door is now closed; LED off.")
         GPIO.output(18, False)
     else:
         GPIO.output(18, True)
+        log("Door is now open; LED on.")
     sock.sendto('ack', address)
