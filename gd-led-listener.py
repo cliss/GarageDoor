@@ -16,9 +16,10 @@ mreq = struct.pack('4sL', group, socket.INADDR_ANY)
 sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 
 # Set up IO
+DOOR_SENSOR_PIN = 18
 GPIO.setwarnings(True)
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(18, GPIO.OUT)
+GPIO.setup(DOOR_SENSOR_PIN, GPIO.OUT)
 
 # Logger
 def log(message):
@@ -33,13 +34,13 @@ def cleanUp(signal, frame):
     sys.exit(0)
 signal.signal(signal.SIGINT, cleanUp)
 
-log("Waiting...")
+log("Using pin {}. Waiting for multicast messages...".format(DOOR_SENSOR_PIN))
 while True:
     data, address = sock.recvfrom(1024)
     if data == "closed":
         log("Door is now closed; LED off.")
-        GPIO.output(18, False)
+        GPIO.output(DOOR_SENSOR_PIN, False)
     else:
-        GPIO.output(18, True)
+        GPIO.output(DOOR_SENSOR_PIN, True)
         log("Door is now open; LED on.")
     sock.sendto('ack', address)
