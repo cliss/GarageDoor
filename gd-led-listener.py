@@ -1,9 +1,10 @@
 import datetime
+import signal
 import socket
 import struct
+import sys
 import RPi.GPIO as GPIO
 
-message = "Hello world!"
 multicastGroup = '224.1.1.1'
 serverAddress = ('', 10000)
 
@@ -19,19 +20,20 @@ GPIO.setwarnings(True)
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(18, GPIO.OUT)
 
-try:
-    while True:
-        print "Waiting..."
-        data, address = sock.recvfrom(1024)
-        print datetime.datetime.now(), "> ", data
-        if data == "closed":
-            GPIO.output(18, False)
-        else:
-            GPIO.output(18, True)
-        sock.sendto('ack', address)
-except (KeyboardInterrupt, SystemExit):
+# Prepare to clean up
+def cleanUp(signal, frame):
     print ""
-    pass
-finally:
-    print("Cleaning up...")
     GPIO.cleanup()
+    sock.close()
+    sys.exit(0)
+signal.signal(signal.SIGINT, cleanUp)
+
+while True:
+    print "Waiting..."
+    data, address = sock.recvfrom(1024)
+    print datetime.datetime.now(), "> ", data
+    if data == "closed":
+        GPIO.output(18, False)
+    else:
+        GPIO.output(18, True)
+    sock.sendto('ack', address)
