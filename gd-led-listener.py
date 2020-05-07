@@ -33,8 +33,8 @@ def cleanUp(signal, frame):
     sys.exit(0)
 signal.signal(signal.SIGINT, cleanUp)
 
+log("Waiting...")
 while True:
-    log("Waiting...")
     data, address = sock.recvfrom(1024)
     if data == "closed":
         log("Door is now closed; LED off.")
