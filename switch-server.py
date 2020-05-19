@@ -14,8 +14,10 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
         if GPIO.input(DOOR_SENSOR_PIN):
+            # Door is open
             self.wfile.write(b'1')
         else:
+            # Door is closed
             self.wfile.write(b'0')
 
 httpd = HTTPServer(('', 8000), SimpleHTTPRequestHandler)
