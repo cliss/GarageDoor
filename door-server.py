@@ -52,6 +52,13 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         elif self.path == "/close":
             message = "LOCK THAT SHIT UP"
             action = close
+        elif self.path == "/state-inverse":
+            if GPIO.input(DOOR_SENSOR_PIN):
+                # Door is open
+                message = "1"
+            else:
+                # Door is closed
+                message = "0"
         elif self.path == "/state":
             if GPIO.input(DOOR_SENSOR_PIN):
                 # Door is open
