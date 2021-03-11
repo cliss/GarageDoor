@@ -43,4 +43,7 @@ while True:
     else:
         GPIO.output(DOOR_SENSOR_PIN, True)
         log("Door is now open; LED on.")
-    sock.sendto('ack', address)
+    try:
+        sock.sendto('ack', address)
+    except:
+        print("ERROR: Could not send acknowledgement packet.")
